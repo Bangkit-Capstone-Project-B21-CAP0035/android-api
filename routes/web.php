@@ -13,6 +13,14 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+// Bagian ini tidak perlu auth
+$router->group(['namespace' => 'Auth'], function () use ($router) {
+    $router->post('register', 'AuthController@register');
+});
+
+// Bagian ini wajib auth
+$router->group(['middleware' => 'auth'], function () use ($router) {
+    $router->get('/', function () use ($router) {
+        return $router->app->version();
+    });
 });
