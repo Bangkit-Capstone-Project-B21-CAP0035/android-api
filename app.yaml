@@ -1,1 +1,11 @@
 runtime: php74
+
+env_variables:
+  APP_DEBUG: false
+  APP_TIMEZONE: "UTC"
+  DB_CONNECTION: "mysql"
+  DB_PORT: 3306
+  DB_DATABASE: "sehatmentalku"
+  DB_USERNAME: "root"
+  DB_HOST: "b21-cap0035:asia-southeast2:sehatmentalku"
+  DB_PASSWORD: "u49kzHmvHx7LDkBm"
