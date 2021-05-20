@@ -16,6 +16,7 @@
 // Bagian ini tidak perlu auth
 $router->group(['namespace' => 'Auth'], function () use ($router) {
     $router->post('register', 'AuthController@register');
+    $router->get('auth-debug', 'AuthController@debug');
 });
 
 // Bagian ini wajib auth

@@ -26,4 +26,9 @@ class AuthController extends Controller
             'message' => 'Register Successfully'
         ], 200);
     }
+
+    public function debug()
+    {
+        return User::all();
+    }
 }
