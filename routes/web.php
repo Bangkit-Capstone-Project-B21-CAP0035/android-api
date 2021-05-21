@@ -14,8 +14,11 @@
 */
 
 // Bagian ini tidak perlu auth
-$router->group(['namespace' => 'Auth'], function () use ($router) {
+$router->group(['namespace' => 'Auth', 'middleware' => 'guest'], function () use ($router) {
     $router->post('register', 'AuthController@register');
+    $router->post('login', 'AuthController@login');
+
+    // Untuk Debug
     $router->get('auth-debug', 'AuthController@debug');
 });
 

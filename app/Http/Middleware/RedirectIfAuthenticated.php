@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
-class Authenticate
+class RedirectIfAuthenticated
 {
     /**
      * The authentication guard factory instance.
@@ -36,12 +36,12 @@ class Authenticate
     public function handle($request, Closure $next, $guard = 'api')
     {
         if ($this->auth->guard($guard)->guest()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized.'
-            ], 401);
+            return $next($request);
         }
 
-        return $next($request);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Please logout first.'
+        ], 401);
     }
 }
