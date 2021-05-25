@@ -55,7 +55,7 @@ class JournalController extends Controller
         if (!$journal) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Update failed, data not found',
+                'message' => 'Data not found',
             ], 404);
         }
 
@@ -81,6 +81,14 @@ class JournalController extends Controller
 
     public function delete($id)
     {
+        $journal = Journal::find($id);
+        if (!$journal) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data not found',
+            ], 404);
+        }
+
         if ($journal->delete()) {
             // Delete image if exists
             if (Storage::exists($journal->image)) {
@@ -96,6 +104,6 @@ class JournalController extends Controller
         return response()->json([
             'status' => 'error',
             'message' => 'Delete failed, please contact developer',
-        ], 422);
+        ], 500);
     }
 }
