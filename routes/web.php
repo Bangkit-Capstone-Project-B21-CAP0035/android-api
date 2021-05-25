@@ -31,5 +31,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['namespace' => 'Journal', 'prefix' => 'journal'], function () use ($router) {
         $router->get('/', 'JournalController@index');
         $router->post('/', 'JournalController@create');
+        $router->post('/update/{id}', 'JournalController@update');
+        $router->post('/delete/{id}', 'JournalController@delete');
     });
 });
