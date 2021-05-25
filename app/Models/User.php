@@ -51,4 +51,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [];
     }
+
+    public function Journals()
+    {
+        return $this->hasMany(Journal::class);
+    }
 }

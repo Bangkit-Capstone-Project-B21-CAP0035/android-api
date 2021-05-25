@@ -27,4 +27,9 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->get('/', function () use ($router) {
         return $router->app->version();
     });
+
+    $router->group(['namespace' => 'Journal', 'prefix' => 'journal'], function () use ($router) {
+        $router->get('/', 'JournalController@index');
+        $router->post('/', 'JournalController@create');
+    });
 });
