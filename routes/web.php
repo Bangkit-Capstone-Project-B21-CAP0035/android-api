@@ -28,10 +28,16 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         return $router->app->version();
     });
 
+    // JOURNAL
     $router->group(['namespace' => 'Journal', 'prefix' => 'journal'], function () use ($router) {
         $router->get('/', 'JournalController@index');
         $router->post('/', 'JournalController@create');
         $router->post('/update/{id}', 'JournalController@update');
         $router->post('/delete/{id}', 'JournalController@delete');
+    });
+
+    // PSYCHOLOGIST
+    $router->group(['namespace' => 'Psychologist', 'prefix' => 'psychologist'], function () use ($router) {
+        $router->get('/', 'PsychologistController@index');
     });
 });
