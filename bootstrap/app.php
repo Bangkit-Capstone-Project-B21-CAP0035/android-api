@@ -2,6 +2,41 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+/**
+ * Check if we are running on Google App Engine
+ *
+ * NOTE: This is determined based on the .env file.  hidden files
+ * (files starting with a dot) are not sent over to Google App
+ * Engine on deploy.  This is because these files match the
+ * Google App Engine ignore regex.
+ *
+ * Example Deploy Verbose Output:
+ * `2015-08-19 15:10:11,380 INFO appcfg.py:2684 Ignoring
+ * file '.env': File matches ignore regex.`
+ *
+ * @return bool
+ */
+function is_gae() {
+    return !file_exists(__DIR__ . '/../.env');
+}
+
+/*
+|—————————————————————————————————————
+| Create The Application
+|—————————————————————————————————————
+|
+| Here we will load the environment and create the application instance
+| that serves as the central piece of this framework. We'll use this
+| application as an "IoC" container and router for this framework.
+|
+*/
+
+if(is_gae()) {
+    $app = new App\Bootstrap\GoogleApp(
+        realpath(__DIR__ . '/../')
+    );
+}
+
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
 ))->bootstrap();
@@ -96,6 +131,7 @@ $app->routeMiddleware([
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -113,5 +149,17 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
+
+/*
+|--------------------------------------------------------------------------
+| Set Storage Path
+|--------------------------------------------------------------------------
+|
+| This script allows you to override the default storage location used by
+| the  application.  You may set the APP_STORAGE environment variable
+| in your .env file,  if not set the default location will be used
+|
+*/
+$app->useStoragePath(env('APP_STORAGE', base_path() . '/storage'));
 
 return $app;
