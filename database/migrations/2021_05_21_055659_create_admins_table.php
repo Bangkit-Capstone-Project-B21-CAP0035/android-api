@@ -20,7 +20,7 @@ class CreateAdminsTable extends Migration
             $table->string('email')->unique();
             $table->string('remember_token', 20)->nullable();
 
-            $table->string('avatar')->nullable()->default('users/default.png');
+            $table->string('avatar')->nullable()->default('admins/default.png');
             $table->text('settings')->nullable()->default(null);
             $table->bigInteger('role_id')->nullable()->unsigned();
             $table->foreign('role_id')->references('id')->on('roles');
