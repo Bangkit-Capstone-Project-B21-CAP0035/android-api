@@ -10,6 +10,17 @@ use App\Models\Journal;
 
 class JournalController extends Controller
 {
+
+    private $client;
+    private $url;
+
+    public function __construct() {
+        $this->url = "/prediction";
+        $this->client = new \GuzzleHttp\Client([
+            'base_uri' => env('TENSORFLOW', 'http://34.126.151.200:9898'),
+        ]);
+    }
+
     public function index()
     {
         return response()->json([
@@ -28,12 +39,18 @@ class JournalController extends Controller
             'image' => ['image', 'max:1024'],
         ]);
 
+        // Get prediction
+        $response = $this->client->post($this->url, ['form_params' => [
+            'story' => $request->story,
+        ]]);
+        $serverResponse = json_decode((string) $response->getBody());
+
         $image = [];
         if ($request->hasFile('image')) {
             $image = ['image' => $request->file('image')->store('journals')];
         }
 
-        $data = Auth::user()->journals()->create($request->only('story') + $image);
+        $data = Auth::user()->journals()->create($request->only('story') + ['prediction' => $serverResponse->data->prediction] + $image);
 
         return response()->json([
             'status' => 'success',
@@ -59,6 +76,12 @@ class JournalController extends Controller
             ], 404);
         }
 
+        // Get prediction
+        $response = $this->client->post($this->url, ['form_params' => [
+            'story' => $request->story,
+        ]]);
+        $serverResponse = json_decode((string) $response->getBody());
+
         $image = [];
         if ($request->hasFile('image')) {
             if ($image = ['image' => $request->file('image')->store('journals')]) {
@@ -69,7 +92,7 @@ class JournalController extends Controller
             }
         }
 
-        $journal->update($request->only('story') + $image);
+        $journal->update($request->only('story') + ['prediction' => $serverResponse->data->prediction] + $image);
         return response()->json([
             'status' => 'success',
             'message' => 'Journal updated Successfully',
