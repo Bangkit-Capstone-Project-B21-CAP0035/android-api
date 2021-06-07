@@ -1,6 +1,12 @@
 runtime: php74
 
+handlers:
+- url: /(.*\.(gif|png|jpg|jpeg|svg|css|js|ttf|woff|woff2|xlsx))$
+  static_files: public/\1
+  upload: public/.*\.(gif|png|jpg|jpeg|svg|css|js|ttf|woff|woff|xlsx)$
+
 env_variables:
+  APP_URL: "https://b21-cap0035.et.r.appspot.com"
   APP_DEBUG: true
   APP_TIMEZONE: "UTC"
   APP_STORAGE: /tmp
